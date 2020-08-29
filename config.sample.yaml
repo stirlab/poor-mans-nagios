@@ -1,0 +1,33 @@
+# Config for the check_nrpe call.
+# Each key/value pair is translated into a long option that is passed to the
+# call to check_nrpe. To pass an argument that has no value, use True as the
+# value.
+# See 'check_nrpe --help' for available arguments.
+nrpe:
+  config-file: /etc/nrpe.conf
+  host: www.example.com
+  command: check_icinga2
+  timeout: 10
+  ipv4: True
+  unknown-timeout: True
+
+# These are particular to poor-mans-vault.
+poor-mans-vault:
+  # Number of minutes between checks when the previous check was OK.
+  # Default: 5
+  check-interval: 5
+  # Number of minutes between checks when the previous check was not OK.
+  # Default: 1
+  retry-interval: 1
+  # Number of consecutive failures that triggers an alert.
+  # Default: 5
+  failure-threshold: 5
+  # List of emails that are sent monitoring alerts.
+  # Default: empty list
+  alert-emails:
+    - foo@example.com
+    - bar@example.com
+  # Default: True
+  alert-on-recovery: True
+  # Required, email from address.
+  email-from: noreply@example.com

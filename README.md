@@ -1,6 +1,6 @@
 # Poor Man's Nagios
 
-Extremely simple NRPE-based server monitor -- ideal for monitoring your monitor
+Extremely simple Nagios/Icinga2 NRPE-based server monitor -- ideal for monitoring your monitor
 server in a small setup.
 
 ## Overview

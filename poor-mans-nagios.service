@@ -1,0 +1,16 @@
+[Unit]
+Description=Poor Man's Nagios
+
+[Service]
+ExecStart=/usr/bin/python3 poor-mans-nagios-cli.py
+Restart=always
+RestartSec=10
+SyslogIdentifier=poor-mans-nagios
+WorkingDirectory=/path/to/poor-mans-nagios
+User=nagios
+Group=nagios
+
+[Install]
+WantedBy=multi-user.target
+
+# vi: ft=dosini

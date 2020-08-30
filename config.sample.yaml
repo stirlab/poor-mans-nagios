@@ -13,7 +13,7 @@ nrpe:
   unknown-timeout: True
 
 # These are particular to poor-mans-vault.
-poor-mans-vault:
+poor-mans-nagios:
   # Location of check_nrpe binary.
   # Default: /usr/lib/nagios/plugins/check_nrpe
   nrpe-binary: /usr/lib/nagios/plugins/check_nrpe

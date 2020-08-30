@@ -1,4 +1,4 @@
-# poor-mans-nagios
+# Poor Man's Nagios
 
 Extremely simple NRPE-based server monitor -- ideal for monitoring your monitor
 server in a small setup.
@@ -24,6 +24,8 @@ This humble library provides the following:
  * ```poor-mans-nagios.service```: Example systemd service file.
 
 ### Setup
+
+Written in pure Python, 3.x required, no external dependencies.
 
 The library does its work by leveraging the [Nagios NRPE](https://github.com/NagiosEnterprises/nrpe)
 framework, so that will need to be properly installed/configured. This library needs access to the

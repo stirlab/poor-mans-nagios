@@ -2,6 +2,7 @@
 
 import os
 import time
+import subprocess
 import yaml
 import logging
 import pprint
@@ -94,12 +95,19 @@ class PoorMansNagios(object):
         self.set_sleep_seconds(self.check_interval)
 
     def check_failure_threshold(self):
-        return self.fail_count >= self.failure_threshold:
+        return self.fail_count >= self.failure_threshold
 
     def handle_failure(self):
         self.fail_count += 1
+        self.logger.debug("Current fail count: %d, failure threshold: %d" % (self.fail_count, self.failure_threshold))
         if self.check_failure_threshold():
-            self.send_problem_alert() if not self.alert_sent
+            self.logger.warning("Check %s for host %s over failure threshold" % (self.check_command, self.checked_host))
+            if self.alert_sent:
+                self.logger.debug("Alerts already sent for this failure, skipping")
+            else:
+                result = self.send_problem_alert()
+                if result:
+                    self.alert_sent = True
 
     def handle_recovery(self):
         if self.alert_sent:
@@ -108,14 +116,13 @@ class PoorMansNagios(object):
             self.send_recovery_alert()
 
     def send_problem_alert(self):
-        self.alert_sent = True
         self.logger.warning("Sending problem alert to: %s" % ", ".join(self.alert_emails))
-        self.mailer.alert_problem(self.alert_emails, self.checked_host, self.check_command)
+        return self.mailer.alert_problem(self.alert_emails, self.checked_host, self.check_command)
 
     def send_recovery_alert(self):
         if self.alert_on_recovery:
             self.logger.info("Sending recovery alert to: %s" % ", ".join(self.alert_emails))
-            self.mailer.alert_recovery(self.alert_emails, self.checked_host, self.check_command)
+            return self.mailer.alert_recovery(self.alert_emails, self.checked_host, self.check_command)
 
     def run_shell_command(self, command, capture_output=True):
         kwargs = {}
@@ -140,7 +147,7 @@ class PoorMansNagios(object):
             self.nrpe_binary,
         ]
         for arg, val in self.config['nrpe'].items():
-            args.append(arg)
+            args.append("--%s" % arg)
             if val is not True:
                 args.append(val)
         return args
@@ -157,19 +164,19 @@ class PoorMansNagios(object):
         self.handle_failure()
         return False
 
-    def configure_next_action(self, result):
-        if self.check_failure_threshold():
-            self.set_sleep_seconds(self.retry_interval)
-        else:
+    def configure_next_action(self, success):
+        if success:
             self.set_sleep_seconds(self.check_interval)
+        else:
+            self.set_sleep_seconds(self.retry_interval)
         self.logger.debug("Set interval to %d seconds" % self.sleep_seconds)
 
     def monitor(self):
         self.logger.info("Starting poor-mans-nagios with check_interval: %d, retry_interval: %d, failure_threshold: %d" % (self.check_interval, self.retry_interval, self.failure_threshold))
         try:
             while True:
-                result = self.execute_check()
-                self.configure_next_action(result)
+                success = self.execute_check()
+                self.configure_next_action(success)
                 self.logger.debug("Sleeping %d seconds" % self.sleep_seconds)
                 time.sleep(self.sleep_seconds)
         except KeyboardInterrupt:

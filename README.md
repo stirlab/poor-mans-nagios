@@ -39,6 +39,8 @@ capable of sending emails it receives locally.
  * Copy ```config.sample.yaml``` to ```config.yaml```
  * Edit to taste
 
+The sample file is well-commented.
+
 ### Usage
 
 Execute ```poor-mans-nagios-cli.py --help``` for help.

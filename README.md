@@ -25,7 +25,11 @@ This humble library provides the following:
 
 ### Setup
 
-Written in pure Python, 3.x required, no external dependencies.
+Written in pure Python, 3.x required.
+
+#### Dependencies
+
+ * [PyYAML](https://github.com/yaml/pyyaml)
 
 The library does its work by leveraging the [Nagios NRPE](https://github.com/NagiosEnterprises/nrpe)
 framework, so that will need to be properly installed/configured. This library needs access to the

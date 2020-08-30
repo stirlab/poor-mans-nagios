@@ -4,8 +4,9 @@
 # value.
 # See 'check_nrpe --help' for available arguments.
 nrpe:
-  config-file: /etc/nrpe.conf
+  # Required.
   host: www.example.com
+  # Required.
   command: check_icinga2
   timeout: 10
   ipv4: True
@@ -13,6 +14,9 @@ nrpe:
 
 # These are particular to poor-mans-vault.
 poor-mans-vault:
+  # Location of check_nrpe binary.
+  # Default: /usr/lib/nagios/plugins/check_nrpe
+  nrpe-binary: /usr/lib/nagios/plugins/check_nrpe
   # Number of minutes between checks when the previous check was OK.
   # Default: 5
   check-interval: 5
